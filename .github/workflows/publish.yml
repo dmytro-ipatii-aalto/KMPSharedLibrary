@@ -103,7 +103,7 @@ jobs:
               targets: [
                   .binaryTarget(
                       name: "${{ env.FRAMEWORK_NAME }}",
-                      url: "https://github.com/dmytroipatii-hue/SPMSharedLibrary/releases/download/v${{ steps.version.outputs.version }}/${{ env.FRAMEWORK_NAME }}.xcframework.zip",
+                      url: "https://github.com/dmytroipatii-hue/KMPSharedLibrary/releases/download/v${{ steps.version.outputs.version }}/${{ env.FRAMEWORK_NAME }}.xcframework.zip",
                       checksum: "${{ steps.checksum.outputs.checksum }}"
                   )
               ]
