@@ -82,8 +82,8 @@ jobs:
 
       - name: Update SPM repo
         run: |
-          git clone https://x-access-token:${{ env.SPM_REPO_ACCESS_TOKEN }}git@github.com:dmytroipatii-hue/SPMSharedLibrary.git
-          cd shared-logic-spm
+          git clone https://x-access-token:${{ env.SPM_REPO_ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git
+          cd SPMSharedLibrary
 
           cat > Package.swift <<EOF
           // swift-tools-version: 5.9
