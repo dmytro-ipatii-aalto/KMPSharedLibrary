@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
 
     env:
-        FRAMEWORK_NAME: SharedLogic
+        FRAMEWORK_NAME: KMPSharedLibrary
         GROUP_ID: com.yourcompany
         ARTIFACT_ID: shared-logic
         USER_NAME: ${{ secrets.USER_NAME }}
