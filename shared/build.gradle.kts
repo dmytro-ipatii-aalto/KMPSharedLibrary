@@ -8,6 +8,7 @@ plugins {
 }
 
 val libraryName = "KMPSharedLibrary"
+val libraryVersion = "1.0.0"
 
 kotlin {
 
@@ -49,7 +50,7 @@ kotlin {
         target.binaries.framework {
             baseName = libraryName
             xcFramework.add(this)
-            isStatic = true
+            // isStatic = true
         }
 
     }
