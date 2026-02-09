@@ -9,7 +9,7 @@ permissions:
   
 jobs:
     release:
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
 
         env:
             FRAMEWORK_NAME: KMPSharedLibrary
@@ -64,29 +64,28 @@ jobs:
             #     shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework.zip
 
             # ---------------------------
-            # iOS: Copy Build XCFramework To SPW wrapper repo
-            # ---------------------------
-            - name: Push XCFramework to SPW repo
-              uses: dmnemec/copy_file_to_another_repo_action@main
-              with:
-                source_file: 'shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework'
-                destination_repo: 'https://x-access-token:${{ env.ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git'
-                user_name: ${{env.USER_NAME}}
-                commit_message: 'Release ${{ steps.version.outputs.version }}'
-
-            # ---------------------------
             # iOS: Update SPM wrapper repo
             # ---------------------------
-            - name: Compute checksum
-              id: checksum
+            - name: Push XCFramework to SPM repo
               run: |
-                CHECKSUM=$(swift package compute-checksum \
-                shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework.zip)
-                echo "checksum=$CHECKSUM" >> $GITHUB_OUTPUT
-
-            - name: Update SPM repo
-              run: |
+                # Clone SPM repo
                 git clone https://x-access-token:${{ env.ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git
+                cd SPMSharedLibrary
+
+                # Clean old framework
+                rm -rf ${{ env.FRAMEWORK_NAME }}.xcframework
+
+                # Copy new XCFramework
+                cp -R ../shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework \
+                    ${{ env.FRAMEWORK_NAME }}.xcframework
+
+                # Git config
+                git config user.name "${{ env.USER_NAME }}"
+
+                # Commit & tag
+                git add ${{ env.FRAMEWORK_NAME }}.xcframework
                 git commit -m "Release ${{ steps.version.outputs.version }}"
-                git tag ${{ steps.version.outputs.version }}
+                git tag v${{ steps.version.outputs.version }}
+
+                # Push
                 git push origin main --tags
