@@ -16,8 +16,7 @@ jobs:
         GROUP_ID: com.yourcompany
         ARTIFACT_ID: shared-logic
         USER_NAME: ${{ secrets.USER_NAME }}
-        KMP_REPO_ACCESS_TOKEN: ${{ secrets.KMP_REPO_ACCESS_TOKEN }}
-        SPM_REPO_ACCESS_TOKEN: ${{ secrets.SPM_REPO_ACCESS_TOKEN }}
+        ACCESS_TOKEN: ${{secrets.DEV_ACCESS_TOKEN}}
 
     steps:
       # ---------------------------
@@ -82,7 +81,7 @@ jobs:
 
       - name: Update SPM repo
         run: |
-          git clone https://x-access-token:${{ env.SPM_REPO_ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git
+          git clone https://x-access-token:${{ env.ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git
           cd SPMSharedLibrary
 
           cat > Package.swift <<EOF
