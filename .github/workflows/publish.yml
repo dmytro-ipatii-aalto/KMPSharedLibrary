@@ -47,29 +47,27 @@ jobs:
 
 
             # ---------------------------
-            # iOS: Build XCFramework
+            # Android CONFIGUARATIONS
+            # ---------------------------
+            - name: Add Gradle Properties
+              run: |
+                echo "githubPackagesUsername=${{env.USER_NAME}}" >> gradle.properties
+                echo "githubPackagesPassword=${{env.ACCESS_TOKEN}}}" >> gradle.properties
+                
+            - name: Publish To GitHub Packages
+              run: |
+                ./gradlew publishAndroidPublicationToMavenLocal
+
+            # ---------------------------
+            # iOS CONFIGUARATIONS
             # ---------------------------
             - name: Build XCFramework
               run: ./gradlew assemble${{ env.FRAMEWORK_NAME }}XCFramework
 
-            # ---------------------------
-            # GitHub Release (iOS binary)
-            # ---------------------------
-            - name: Create GitHub Release
-              uses: softprops/action-gh-release@v2
-              with:
-               name: ${{ steps.version.outputs.version }}
-               tag_name: v${{ steps.version.outputs.version }}
-            #   files: |
-            #     shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework.zip
-
-            # ---------------------------
-            # iOS: Update SPM wrapper repo
-            # ---------------------------
-            - name: Push XCFramework to SPM repo
+            - name: Publish XCFramework to SPM repo
               run: |
                 # Clone SPM repo
-                git clone https://x-access-token:${{ env.ACCESS_TOKEN }}@github.com/dmytroipatii-hue/SPMSharedLibrary.git
+                git clone https://x-access-token:${{ env.ACCESS_TOKEN }}@github.com/${{env.USER_NAME}}/SPMSharedLibrary.git
                 cd SPMSharedLibrary
 
                 # Clean old framework
@@ -89,3 +87,13 @@ jobs:
 
                 # Push
                 git push origin main --tags
+            
+            # ---------------------------
+            # KMP Release Creation
+            # ---------------------------
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+               name: ${{ steps.version.outputs.version }}
+               tag_name: v${{ steps.version.outputs.version }}
+        
