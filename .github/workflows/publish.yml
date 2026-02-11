@@ -53,8 +53,8 @@ jobs:
               run: |
                 echo "githubPackagesUsername=${{env.USER_NAME}}" >> gradle.properties
                 echo "githubPackagesPassword=${{env.ACCESS_TOKEN}}}" >> gradle.properties
-                
-            - name: Publish To GitHub Packages
+
+            - name: Publish Android Packages
               run: |
                 ./gradlew publishAndroidPublicationToMavenLocal
 
