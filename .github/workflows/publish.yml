@@ -56,7 +56,7 @@ jobs:
 
             - name: Publish Android Packages
               run: |
-                ./gradlew publishAndroidPublicationToMavenLocal
+                ./gradlew publishAndroidPublicationToGitHubPackagesRepository 
 
             # ---------------------------
             # iOS CONFIGUARATIONS

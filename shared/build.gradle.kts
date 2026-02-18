@@ -125,7 +125,7 @@ publishing {
 
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/dmytroipatii-hue/KMPSharedLibrary")
+            url = uri("https://maven.pkg.github.com/dmytro-ipatii-aalto/KMPSharedLibrary")
             credentials {
                 username = providers.gradleProperty("githubPackagesUsername")
                     .orElse(providers.environmentVariable("USER_NAME"))
@@ -151,7 +151,7 @@ mavenPublishing {
     pom {
         name.set("KMP Shared Library")
         description.set("Sample Kotlin Multiplatform Library")
-        url.set("https://github.com/dmytroipatii-hue/KMPSharedLibrary")
+        url.set("https://github.com/dmytro-ipatii-aalto/KMPSharedLibrary")
 
         licenses {
             license {
@@ -162,15 +162,15 @@ mavenPublishing {
 
         developers {
             developer {
-                id.set("dmytroipatii-hue")
+                id.set("dmytro-ipatii-aalto")
                 name.set("Dmytro Ipatii")
             }
         }
 
         scm {
-            url.set("https://github.com/dmytroipatii-hue/KMPSharedLibrary")
-            connection.set("scm:git:git://github.com/dmytroipatii-hue/KMPSharedLibrary.git")
-            developerConnection.set("scm:git:ssh://git@github.com/dmytroipatii-hue/KMPSharedLibrary.git")
+            url.set("https://github.com/dmytro-ipatii-aalto/KMPSharedLibrary")
+            connection.set("scm:git:git://github.com/dmytro-ipatii-aalto/KMPSharedLibrary.git")
+            developerConnection.set("scm:git:ssh://git@github.com/dmytro-ipatii-aalto/KMPSharedLibrary.git")
         }
 
     }
