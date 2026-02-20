@@ -68,20 +68,22 @@ jobs:
               run: |
                 # Clone SPM repo
                 git clone https://x-access-token:${{ secrets.DEV_ACCESS_TOKEN }}@github.com/${{secrets.USER_NAME}}/SPMSharedLibrary.git
-                cd SPMSharedLibrary/Sources
+                cd SPMSharedLibrary
+
+                mkdir -p Sources
 
                 # Clean old framework
-                rm -rf ${{ env.FRAMEWORK_NAME }}.xcframework
+                rm -rf Sources/${{ env.FRAMEWORK_NAME }}.xcframework
 
                 # Copy new XCFramework
                 cp -R ../shared/build/XCFrameworks/release/${{ env.FRAMEWORK_NAME }}.xcframework \
-                    ${{ env.FRAMEWORK_NAME }}.xcframework
+                    Sources/${{ env.FRAMEWORK_NAME }}.xcframework
 
                 # Git config
                 git config user.name "${{ secrets.USER_NAME }}"
 
                 # Commit & tag
-                git add ${{ env.FRAMEWORK_NAME }}.xcframework
+                git add Sources/${{ env.FRAMEWORK_NAME }}.xcframework
                 git commit -m "Release ${{ steps.version.outputs.version }}" || echo "No changes to commit"
                 git tag v${{ steps.version.outputs.version }}
 
