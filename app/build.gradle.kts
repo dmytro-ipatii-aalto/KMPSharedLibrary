@@ -4,9 +4,9 @@ plugins {
 }
 
 android {
-    val androidNamespace = providers.gradleProperty("ANDROID_NAMESPACE").get()
-    val compileSdkNumber = providers.gradleProperty("COMPILE_SDK").map(String::toInt).get()
-    val minSdkNumber = providers.gradleProperty("MIN_SDK").map(String::toInt).get()
+    val androidNamespace = providers.gradleProperty("LIBRARY_IDENTIFIER").get()
+    val compileSdkNumber = libs.versions.sdk.compile.get().toInt()
+    val minSdkNumber = libs.versions.sdk.compile.get().toInt()
 
     namespace = androidNamespace
     compileSdk = compileSdkNumber

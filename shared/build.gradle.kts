@@ -11,6 +11,14 @@ plugins {
 }
 
 
+// Shared Configurations
+val libraryGroup = providers.gradleProperty("LIBRARY_GROUP").get()
+val libraryArtifactId = providers.gradleProperty("LIBRARY_ARTIFACT_ID").get()
+val libraryVersion = providers.gradleProperty("LIBRARY_VERSION").get()
+val libraryIdentifier = providers.gradleProperty("LIBRARY_IDENTIFIER").get()
+
+
+
 private fun Project.configureKMPLibrary() {
     extensions.configure(KotlinMultiplatformExtension::class.java) {
 
@@ -26,22 +34,21 @@ private fun Project.configureKMPLibrary() {
 private fun Project.configureAndroidLibrary() {
     extensions.configure(KotlinMultiplatformExtension::class.java){
 
-        val androidNamespace = providers.gradleProperty("ANDROID_NAMESPACE").get()
-        val compileSdkNumber = providers.gradleProperty("COMPILE_SDK").map(String::toInt).get()
-        val minSdkNumber = providers.gradleProperty("MIN_SDK").map(String::toInt).get()
+        val compileSdkNumber = libs.versions.sdk.compile.get().toInt()
+        val minSdkNumber = libs.versions.sdk.min.get().toInt()
 
         // Android target configuration based on the official Kotlin Multiplatform documentation.
         // Documentation reference: https://kotlinlang.org/docs/multiplatform/multiplatform-publish-lib-setup.html#publish-an-android-library
 
         androidLibrary{
-            namespace = androidNamespace
+            namespace = libraryIdentifier
             compileSdk = compileSdkNumber
             minSdk = minSdkNumber
 
             compilations.configureEach {
                 compileTaskProvider.configure{
                     compilerOptions {
-                        jvmTarget.set(JvmTarget.JVM_11)
+                        jvmTarget.set(JvmTarget.JVM_21)
                     }
                 }
             }
@@ -67,8 +74,6 @@ private fun Project.configureIOSLibrary() {
             .orElse("KMPSharedLibrary")
             .get()
 
-        val bundleId = providers.gradleProperty("IOS_BUNDLE_ID").get()
-
         // For iOS targets, this is also where you should
         // configure native binary output. For more information, see:
         // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
@@ -83,15 +88,13 @@ private fun Project.configureIOSLibrary() {
         // project can be found here:
         // https://developer.android.com/kotlin/multiplatform/migrate
         val xcFramework = XCFramework(xcFrameworkName = frameworkName)
-        val frameworkVersion = providers.gradleProperty("VERSION_NAME")
-            .orElse("LOCAL_VERSION_NAME")
-            .get()
+        val frameworkVersion = libraryVersion
 
         iOSTargets.forEach { target ->
             target.binaries.framework {
                 baseName = frameworkName
                 version = frameworkVersion
-                binaryOption("bundleId", bundleId)
+                binaryOption("bundleId", libraryIdentifier)
 
                 xcFramework.add(this)
                 debuggable = false
@@ -160,19 +163,17 @@ kotlin {
 
 }
 
-
-group = providers.gradleProperty("GROUP_ID").get()
-version = providers.gradleProperty("VERSION_NAME")
-    .orElse("LOCAL_VERSION_NAME")
-    .get()
+// Use versioning snapshot
+group = libraryGroup
+version = libraryVersion
 
 mavenPublishing {
 
     publishing {
         repositories {
             maven {
-                name = providers.gradleProperty("MAVEN_REPOSITORY_NAME").get()
-                url = uri(providers.gradleProperty("MAVEN_REPOSITORY_URL").get())
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/dmytro-ipatii-aalto/KMPSharedLibrary")
                 credentials(PasswordCredentials::class)
             }
         }
@@ -180,7 +181,7 @@ mavenPublishing {
 
     // Define coordinates for the published artifact
     coordinates(
-        artifactId = providers.gradleProperty("ARTIFACT_ID").get(),
+        artifactId = libraryArtifactId
     )
 
 }
